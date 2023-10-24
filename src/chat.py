@@ -1,3 +1,4 @@
+from asyncio import sleep
 from time import time
 from uuid import uuid4
 
@@ -60,13 +61,18 @@ def create_chat_completions(data: CreateChatCompletion):
             }
         )
 
-    def stream_output():
+    async def stream_output():
+        t = time()
         for delta in generate_response(data):
-            yield data_event(data.user, delta, data.model)
+            interval = (time() - t) / len(delta)
+            t = time()
+            for i in delta:
+                yield data_event(data.user, i, data.model)
+                await sleep(interval)
         yield data_event(data.user, None, data.model, True)
         yield "data: [DONE]\n\n"
 
-    return StreamingResponse(stream_output())
+    return StreamingResponse(stream_output(), media_type="text/event-stream")
 
 
 def generate_response(data: CreateChatCompletion):
@@ -86,7 +92,11 @@ def generate_response(data: CreateChatCompletion):
         data.max_tokens,
         data.temperature,
     ):
-        delta = this.removeprefix(last)
-        last = this
+        delta = this.removeprefix(last)[:-3]
 
-        yield delta
+        if delta:
+            last += delta
+            yield delta
+
+    if this and this != last:
+        yield this.removeprefix(last)
