@@ -66,7 +66,7 @@ def create_chat_completions(data: CreateChatCompletion):
         yield data_event(data.user, None, data.model, True)
         yield "data: [DONE]\n\n"
 
-    return StreamingResponse(stream_output)
+    return StreamingResponse(stream_output())
 
 
 def generate_response(data: CreateChatCompletion):
