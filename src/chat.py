@@ -64,7 +64,7 @@ def create_chat_completions(data: CreateChatCompletion):
     async def stream_output():
         t = time()
         for delta in generate_response(data):
-            interval = (time() - t) / len(delta)
+            interval = min(0.05, (time() - t) / len(delta))
             t = time()
             for i in delta:
                 yield data_event(data.user, i, data.model)
