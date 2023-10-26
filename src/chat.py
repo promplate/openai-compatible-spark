@@ -68,7 +68,8 @@ def create_chat_completions(data: CreateChatCompletion):
             t = time()
             for i in delta:
                 yield data_event(data.user, i, data.model)
-                await sleep(interval)
+                if not i.isascii():
+                    await sleep(interval)
         yield data_event(data.user, None, data.model, True)
         yield "data: [DONE]\n\n"
 
