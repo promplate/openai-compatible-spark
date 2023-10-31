@@ -93,9 +93,7 @@ def generate_response(data: CreateChatCompletion):
         data.max_tokens,
         data.temperature,
     ):
-        delta = this.removeprefix(last)[:-3]
-
-        if delta:
+        if delta := this.removeprefix(last)[:-3]:
             last += delta
             yield delta
 
