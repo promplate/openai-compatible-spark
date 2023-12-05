@@ -4,15 +4,10 @@ This server wraps Spark's API as OpenAI's
 
 ## Install
 
-First, install `pdm`
+Install `pdm` and then install dependencies
 
 ```shell
 pip install pdm
-```
-
-Sencond, setup this project
-
-```shell
 pdm install
 ```
 
@@ -20,14 +15,21 @@ pdm install
 
 You need to set 3 environment variables:
 
-```env
+```properties
 APPID=
 APISecret=
-APIKey=
+APIKEY=
 ```
 
 Start the development server:
 
 ```shell
 pdm dev
+```
+
+You can use `Docker` to deploy too. After setuping the environment variables, run:
+
+```shell
+docker build -t spark2o .
+docker run -p 9040:9040 spark2o
 ```
